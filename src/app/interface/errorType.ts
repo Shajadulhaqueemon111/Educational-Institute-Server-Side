@@ -3,7 +3,7 @@ export type TErrorSources = {
   message: string;
 }[];
 
-export type TGenricErrorSources = {
+export type TGenericErrorResponse = {
   statusCode: number;
   message: string;
   errorSources: TErrorSources;
