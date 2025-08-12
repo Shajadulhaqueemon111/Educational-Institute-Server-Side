@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
-import config from "./config";
-import app from "./app";
+import mongoose from 'mongoose';
+import config from './app/config';
+import app from './app';
 
 main().catch((err) => console.log(err));
 
 async function main() {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/test");
+    await mongoose.connect('mongodb://127.0.0.1:27017/test');
 
     app.listen(config.port, () => {
       console.log(`Example app listening on port ${config.port}`);
