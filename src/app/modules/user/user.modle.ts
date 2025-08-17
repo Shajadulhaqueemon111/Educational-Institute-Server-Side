@@ -29,8 +29,7 @@ export const UserSchema = new Schema<IUser>(
     },
     role: {
       type: String,
-      enum: ['user', 'student', 'admin'],
-      default: 'user',
+      enum: ['parents', 'teachers', 'student', 'admin'],
     },
 
     isDeleted: {
