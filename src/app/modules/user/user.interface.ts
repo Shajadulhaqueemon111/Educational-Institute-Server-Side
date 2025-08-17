@@ -4,6 +4,6 @@ export interface IUser {
   status?: 'active' | 'block';
   email: string;
   password: string;
-  role: 'user' | 'student' | 'admin';
+  role: 'teachers' | 'Parent' | 'student' | 'admin';
   isDeleted: boolean;
 }
