@@ -58,7 +58,6 @@ const LoginUser = async (payload: TLogin) => {
   };
 };
 
-// =================== REFRESH TOKEN FUNCTION ===================
 const refreshToken = async (token: string) => {
   if (!token) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'You are not Authorized');
