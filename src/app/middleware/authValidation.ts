@@ -17,7 +17,7 @@ const authValidateRequest = (...requiredRoles: TUserRole[]) => {
       token,
       config.jwt_access_secret as string,
     ) as JwtPayload;
-    console.log('amar', decoded);
+    console.log('hi', decoded);
 
     const { role, email } = decoded;
     if (!email || !role) {
