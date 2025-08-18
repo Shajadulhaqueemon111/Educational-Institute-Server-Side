@@ -16,3 +16,5 @@ route.post(
   refreshToken,
 );
 route.post('/logout', logout);
+
+export const authRoute = route;

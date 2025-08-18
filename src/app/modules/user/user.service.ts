@@ -1,6 +1,10 @@
+import { TAdmin } from '../admin/admin.interface';
 import { IUser } from './user.interface';
 import UserModel from './user.modle';
-
+import mongoose from 'mongoose';
+import AppError from '../../error/appError';
+import httpStatus from 'http-status';
+import AdminModle from '../admin/admin.modle';
 const createUserIntoDB = async (payload: IUser) => {
   const result = await UserModel.create(payload);
   return result;
@@ -34,10 +38,59 @@ const deleteUserIntoDB = async (_id: string) => {
   return result;
 };
 
+// create admin
+const createAdminIntoDB = async (password: string, payload: TAdmin) => {
+  const userData: Partial<IUser> = {
+    role: 'admin',
+    email: payload.email,
+    name: payload.name,
+    password,
+  };
+
+  console.log(userData);
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  console.log(session);
+
+  try {
+    const newUser = await UserModel.create([userData], { session });
+
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'user create failed');
+    }
+
+    const adminPayload = {
+      ...payload,
+      user: newUser[0]._id,
+      profileImage: payload.profileImage || undefined,
+    };
+
+    console.log(adminPayload);
+
+    const newAdmin = await AdminModle.create([adminPayload], { session });
+
+    if (!newAdmin.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'admin created failed');
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return newAdmin[0];
+  } catch (err) {
+    console.log(err);
+
+    await session.abortTransaction();
+    session.endSession();
+    throw err;
+  }
+};
 export const userService = {
   createUserIntoDB,
   getAllUserIntoDB,
   getSingleUserIntoDB,
   updateUserIntoDB,
   deleteUserIntoDB,
+  createAdminIntoDB,
 };
