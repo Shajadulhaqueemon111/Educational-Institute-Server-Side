@@ -12,7 +12,6 @@ import authValidateRequest from '../../middleware/authValidation';
 import { USER_ROLE } from '../user/user.constant';
 
 const route = express.Router();
-
 route.get('/', getAllAdmin);
 route.get('/:id', getSingleAdmin);
 route.patch(
