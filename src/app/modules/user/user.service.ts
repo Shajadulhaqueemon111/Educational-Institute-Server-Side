@@ -1,10 +1,12 @@
 import { TAdmin } from '../admin/admin.interface';
 import { IUser } from './user.interface';
 import UserModel from './user.modle';
-import mongoose from 'mongoose';
+import mongoose, { startSession } from 'mongoose';
 import AppError from '../../error/appError';
 import httpStatus from 'http-status';
 import AdminModle from '../admin/admin.modle';
+import { TStudent } from '../student/student.interface';
+import StudentModle from '../student/student.modle';
 const createUserIntoDB = async (payload: IUser) => {
   const result = await UserModel.create(payload);
   return result;
@@ -86,6 +88,48 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
     throw err;
   }
 };
+
+const createStudentIntoDB = async (password: string, payload: TStudent) => {
+  const userData: Partial<IUser> = {
+    role: 'student',
+    name: payload.name,
+    email: payload.email,
+    password,
+  };
+  console.log(userData);
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  console.log(session);
+  try {
+    const newUser = await UserModel.create([userData], { session });
+
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'user create failed');
+    }
+
+    const studentPayload = {
+      ...payload,
+      user: newUser[0]._id,
+      profileImage: payload.profileImage || undefined,
+    };
+    console.log(studentPayload);
+
+    const newStudent = await StudentModle.create([studentPayload], { session });
+    if (!newStudent.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'student created failed');
+    }
+    await session.commitTransaction();
+    session.endSession();
+    console.log(newStudent);
+  } catch (err) {
+    console.log(err);
+    await session.abortTransaction();
+    session.endSession();
+    throw err;
+  }
+};
 export const userService = {
   createUserIntoDB,
   getAllUserIntoDB,
@@ -93,4 +137,5 @@ export const userService = {
   updateUserIntoDB,
   deleteUserIntoDB,
   createAdminIntoDB,
+  createStudentIntoDB,
 };

@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
-import { TStuden } from './student.interface';
+import { TStudent } from './student.interface';
 
-const StudentSchema = new Schema<TStuden>(
+const StudentSchema = new Schema<TStudent>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -26,6 +26,7 @@ const StudentSchema = new Schema<TStuden>(
     },
     profileImage: {
       type: String,
+      required: true,
     },
     address: {
       type: String,
@@ -38,6 +39,6 @@ const StudentSchema = new Schema<TStuden>(
   },
 );
 
-const StudentModle = model<TStuden>('Student', StudentSchema);
+const StudentModle = model<TStudent>('Student', StudentSchema);
 
 export default StudentModle;

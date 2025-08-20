@@ -1,4 +1,4 @@
-import { TStuden } from './student.interface';
+import { TStudent } from './student.interface';
 import StudentModle from './student.modle';
 
 export const getAllStudentIntoDB = async () => {
@@ -15,7 +15,7 @@ export const getSingleStudentIntoDB = async (_id: string) => {
 
 export const updateStudetIntoDB = async (
   _id: string,
-  payload: Partial<TStuden>,
+  payload: Partial<TStudent>,
 ) => {
   const result = await StudentModle.findByIdAndUpdate(_id, payload, {
     new: true,
