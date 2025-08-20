@@ -8,4 +8,5 @@ export type TStuden = {
   rollNumber: string;
   profileImage?: string;
   address: string;
+  isDeleted: boolean;
 };
