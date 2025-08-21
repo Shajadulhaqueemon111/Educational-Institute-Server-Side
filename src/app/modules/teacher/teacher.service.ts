@@ -30,4 +30,5 @@ export const softDeleteTeacherIntoDB = async (_id: string) => {
     { isDeleted: true },
     { new: true },
   );
+  return result;
 };

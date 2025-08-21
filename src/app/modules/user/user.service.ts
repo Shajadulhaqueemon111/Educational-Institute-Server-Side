@@ -7,6 +7,8 @@ import httpStatus from 'http-status';
 import AdminModle from '../admin/admin.modle';
 import { TStudent } from '../student/student.interface';
 import StudentModle from '../student/student.modle';
+import { TTeacher } from '../teacher/teacher.inerface';
+import TeacherModle from '../teacher/teacher.modle';
 const createUserIntoDB = async (payload: IUser) => {
   const result = await UserModel.create(payload);
   return result;
@@ -130,6 +132,48 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     throw err;
   }
 };
+
+const createTeacherIntoDB = async (password: string, payload: TTeacher) => {
+  const userData: Partial<IUser> = {
+    role: 'teacher',
+    name: payload.name,
+    email: payload.email,
+    password,
+  };
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  console.log(session);
+
+  try {
+    const newUser = await UserModel.create([userData], { session });
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'user not create');
+    }
+
+    const techerPayload = {
+      ...payload,
+      user: newUser[0]._id,
+      profieImage: payload.profileImage || undefined,
+    };
+
+    console.log(techerPayload);
+
+    const newTeacher = await TeacherModle.create([techerPayload], { session });
+    console.log(newTeacher);
+
+    if (!newTeacher.length) {
+      throw new AppError(httpStatus.OK, 'teacher not created');
+    }
+    await session.commitTransaction();
+    session.endSession();
+    return newTeacher[0];
+  } catch (err) {
+    console.log(err);
+    await session.abortTransaction();
+    session.endSession();
+  }
+};
 export const userService = {
   createUserIntoDB,
   getAllUserIntoDB,
@@ -138,4 +182,5 @@ export const userService = {
   deleteUserIntoDB,
   createAdminIntoDB,
   createStudentIntoDB,
+  createTeacherIntoDB,
 };

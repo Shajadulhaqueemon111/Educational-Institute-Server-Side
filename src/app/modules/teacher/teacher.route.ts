@@ -13,12 +13,12 @@ import { USER_ROLE } from '../user/user.constant';
 const route = express.Router();
 route.get(
   '/',
-  authValidateRequest(USER_ROLE.teacher, USER_ROLE.admin),
+
   getAllTeacher,
 );
 route.get(
   '/:id',
-  authValidateRequest(USER_ROLE.teacher, USER_ROLE.admin),
+
   getSingleTeacher,
 );
 route.patch(

@@ -83,6 +83,17 @@ const createStudent = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const createTeacher = catchAsync(async (req, res) => {
+  const { password, teacher: teacherData } = req.body;
+  const result = await userService.createTeacherIntoDB(password, teacherData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'teacher created successfully',
+    data: result,
+  });
+});
 
 export const userController = {
   createUser,
@@ -92,4 +103,5 @@ export const userController = {
   deleteUser,
   createAdmin,
   createStudent,
+  createTeacher,
 };
