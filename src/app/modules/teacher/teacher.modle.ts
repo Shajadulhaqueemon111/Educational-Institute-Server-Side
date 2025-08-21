@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Query, Schema } from 'mongoose';
 import { TTeacher } from './teacher.inerface';
 
 const techerSchema = new Schema<TTeacher>(
@@ -34,6 +34,10 @@ const techerSchema = new Schema<TTeacher>(
   },
 );
 
+techerSchema.pre(/^find/, function (this: Query<any, any>, next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
 const TeacherModle = model<TTeacher>('Teacher', techerSchema);
 
 export default TeacherModle;

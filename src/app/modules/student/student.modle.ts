@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Query, Schema } from 'mongoose';
 import { TStudent } from './student.interface';
 
 const StudentSchema = new Schema<TStudent>(
@@ -39,6 +39,10 @@ const StudentSchema = new Schema<TStudent>(
   },
 );
 
+StudentSchema.pre(/^find/, function (this: Query<any, any>, next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
 const StudentModle = model<TStudent>('Student', StudentSchema);
 
 export default StudentModle;
