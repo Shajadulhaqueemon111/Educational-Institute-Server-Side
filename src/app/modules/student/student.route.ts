@@ -21,3 +21,5 @@ route.patch(
   updateStudent,
 );
 route.delete('/:_id', authValidateRequest(USER_ROLE.student), deleteStudent);
+
+export const StudentRoute = route;
